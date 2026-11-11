@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compte Rendu TP N°02 - Détermination de la Quantité de Matière (Vierge)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arabic: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #cbd5e1;
+            margin: 0;
+            padding: 0;
+            color: #0f172a;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* A4 Page Simulation for Display */
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            padding: 14mm 16mm;
+            margin: 10mm auto;
+            background: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+            border-radius: 2px;
+            position: relative;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        /* Decorative Stripe */
+        .header-stripe {
+            height: 4px;
+            background: linear-gradient(90deg, #15803d 0%, #0284c7 100%);
+        }
+
+        /* Handwriting Note Lines Styling */
+        .line-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .write-line {
+            width: 100%;
+            /* Taller height (9.5mm / 36px) for comfortable handwriting */
+            height: 34px; 
+            border-bottom: 1px solid #cbd5e1;
+            box-sizing: border-box;
+        }
+
+        /* Print Specific Rules */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            body {
+                background: none !important;
+                padding: 0 !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .a4-page {
+                width: 210mm !important;
+                height: 297mm !important;
+                margin: 0 !important;
+                padding: 12mm 15mm !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-after: always;
+            }
+
+            .a4-page:last-child {
+                page-break-after: avoid;
+            }
+
+            .write-line {
+                border-bottom: 1px solid #94a3b8 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-300">
+
+    <!-- Control Header for Screen -->
+    <header class="no-print sticky top-0 z-50 bg-slate-900 text-white py-3 px-6 shadow-xl border-b border-slate-700 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="bg-brand-600 p-2 rounded-lg text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold leading-tight">قالب كتابة يدوي - Compte Rendu TP N°02</h1>
+                <p class="text-xs text-slate-400">مخصص للطباعة والكتابة اليدوية (3 صفحات A4)</p>
+            </div>
+        </div>
+
+        <button onclick="window.print()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-md transition-all flex items-center gap-2 cursor-pointer text-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+            طباعة القالب الان (Ctrl + P)
+        </button>
+    </header>
+
+    <!-- ==================== PAGE 1 ==================== -->
+    <div class="a4-page">
+        <div>
+            <!-- Header Stripe -->
+            <div class="header-stripe mb-4 rounded-full"></div>
+
+            <!-- Header Section -->
+            <div class="border-b-2 border-slate-200 pb-3 mb-4">
+                <div class="flex justify-between items-center">
+                    <!-- Left (French) -->
+                    <div class="text-left text-xs leading-tight text-slate-700">
+                        <p class="font-bold text-slate-900 text-sm">République Algérienne Démocratique et Populaire</p>
+                        <p>Ministère de l'Enseignement Supérieur et de la Recherche Scientifique</p>
+                        <p class="text-brand-800 font-bold">Centre Universitaire de Barika</p>
+                        <p>Institut des Sciences</p>
+                        <p class="text-slate-600">Département de Socle Commun ST</p>
+                        <p class="text-slate-500 font-medium">Matière: TP Chimie 1 (S1)</p>
+                    </div>
+
+                    <!-- Center Logo Image Placeholder -->
+                    <div class="text-center px-2">
+                        <img src="img1.jpg" alt="Logo Université" class="w-16 h-16 object-contain mx-auto">
+                    </div>
+
+                    <!-- Right (Arabic) -->
+                    <div class="text-right text-xs leading-tight text-slate-700 font-arabic" dir="rtl">
+                        <p class="font-bold text-slate-900">الجمهورية الجزائرية الديمقراطية الشعبية</p>
+                        <p>وزارة التعليم العالي والبحث العلمي</p>
+                        <p class="text-brand-800 font-bold">المركز الجامعي بريكة - سي الحواس</p>
+                        <p>معهد العلوم والتكنولوجيا</p>
+                        <p class="text-slate-600">قسم العلوم والتكنولوجيا</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Card -->
+            <div class="bg-slate-50 border border-slate-300 rounded-xl p-3 mb-4 shadow-sm">
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                        <span class="text-slate-500">اسم ولقب الطالب:</span>
+                        <span class="font-bold text-slate-900 ml-1 text-xs">عبد المؤمن شياد - محمد الصادق شباطة</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500">المستوى الدراسي:</span>
+                        <span class="font-semibold text-slate-800 ml-1">1ère Année LMD - ST (S1)</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500">عنوان العمل التطبيقي:</span>
+                        <span class="font-bold text-brand-800 ml-1">TP N°02: Determination of Amount of Substance</span>
+                    </div>
+                    <div>
+                        <span class="text-slate-500">السنة الجامعية:</span>
+                        <span class="font-semibold text-slate-800 ml-1">2026 / 2027</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Title Banner -->
+            <div class="bg-gradient-to-r from-slate-900 via-brand-900 to-slate-900 text-white rounded-xl p-3 text-center mb-5 shadow-md">
+                <span class="text-[11px] font-semibold text-brand-100 tracking-widest uppercase block">compte rendu de chimie</span>
+                <h2 class="text-lg font-bold tracking-wide">TP N°02: Determination of the Amount of Substance</h2>
+                <p class="text-xs text-slate-300 font-arabic mt-0.5">تحديد كمية المادة للأنواع الكيميائية وتطبيقات تحضير المحاليل</p>
+            </div>
+
+            <!-- SECTION 1 -->
+            <section class="mb-5">
+                <div class="flex items-center gap-2 mb-2 border-l-4 border-brand-600 pl-3">
+                    <h3 class="text-sm font-bold text-slate-900">1. Introduction Générale</h3>
+                </div>
+                <div class="line-container">
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                </div>
+            </section>
+
+            <!-- SECTION 2.1 & 2.2 -->
+            <section class="mb-2">
+                <div class="flex items-center gap-2 mb-2 border-l-4 border-brand-600 pl-3">
+                    <h3 class="text-sm font-bold text-slate-900">2. Développement</h3>
+                </div>
+
+                <div class="mb-3">
+                    <h4 class="text-xs font-bold text-brand-800 mb-1">2.1 Objectif Général de la Séance:</h4>
+                    <div class="line-container">
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold text-brand-800 mb-1">2.2 Objectifs des Expériences (les 4 expériences):</h4>
+                    <div class="line-container">
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="border-t border-slate-200 pt-2 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+            <span>TP Chimie N°02 | Abdelmoumen Chiad - Mohamed Essadek Chebbah</span>
+            <span>Page 1 / 3</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 2 ==================== -->
+    <div class="a4-page">
+        <div>
+            <!-- Header Stripe -->
+            <div class="header-stripe mb-4 rounded-full"></div>
+
+            <!-- SECTION 2.3 -->
+            <section class="mb-5">
+                <div class="flex items-center gap-2 mb-2 border-l-4 border-brand-600 pl-3">
+                    <h4 class="text-sm font-bold text-slate-900">2.3 Principe de l'Expérience et Matériel Utilisé</h4>
+                </div>
+                <div class="line-container">
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                </div>
+            </section>
+
+            <!-- SECTION 2.4 -->
+            <section class="mb-5">
+                <div class="flex items-center gap-2 mb-2 border-l-4 border-brand-600 pl-3">
+                    <h4 class="text-sm font-bold text-slate-900">2.4 Résumé des Expériences</h4>
+                </div>
+                <div class="line-container">
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                </div>
+            </section>
+
+            <!-- SECTION 2.5 (Start Questions Q1 & Q2) -->
+            <section>
+                <div class="flex items-center gap-2 mb-2 border-l-4 border-brand-600 pl-3">
+                    <h3 class="text-sm font-bold text-slate-900">2.5 Réponses aux Questions du TP</h3>
+                </div>
+
+                <div class="mb-3">
+                    <h5 class="text-xs font-bold text-slate-800 mb-1">Q1: Define the amount of a substance in moles.</h5>
+                    <div class="line-container">
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h5 class="text-xs font-bold text-slate-800 mb-1">Q2: Calculate the mass of NaCl to be weighed.</h5>
+                    <div class="line-container">
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="border-t border-slate-200 pt-2 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+            <span>TP Chimie N°02 | Abdelmoumen Chiad - Mohamed Essadek Chebbah</span>
+            <span>Page 2 / 3</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 3 ==================== -->
+    <div class="a4-page">
+        <div>
+            <!-- Header Stripe -->
+            <div class="header-stripe mb-4 rounded-full"></div>
+
+            <!-- Questions Continued: Q3, Q4, Q5, Q6 -->
+            <section class="mb-5 space-y-4">
+                <div>
+                    <h5 class="text-xs font-bold text-slate-800 mb-1">Q3: Calculate the volume necessary for the dilution of NaCl.</h5>
+                    <div class="line-container">
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h5 class="text-xs font-bold text-slate-800 mb-1">Q4: Calculate the volume necessary for the preparation of the acetic acid solution.</h5>
+                    <div class="line-container">
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h5 class="text-xs font-bold text-slate-800 mb-1">Q5: Calculate the amount of substance n present in the piece of copper.</h5>
+                    <div class="line-container">
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h5 class="text-xs font-bold text-slate-800 mb-1">Q6: Calculate the amount of substance n present in each solution.</h5>
+                    <div class="line-container">
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                        <div class="write-line"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: CONCLUSION -->
+            <section class="mt-2">
+                <div class="flex items-center gap-2 mb-2 border-l-4 border-brand-600 pl-3">
+                    <h3 class="text-sm font-bold text-slate-900">3. Conclusion et Synthèse</h3>
+                </div>
+                <div class="line-container">
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                    <div class="write-line"></div>
+                </div>
+            </section>
+        </div>
+
+        <div class="border-t border-slate-200 pt-2 flex justify-between items-center text-[10px] text-slate-400 font-mono">
+            <span>TP Chimie N°02 | Abdelmoumen Chiad - Mohamed Essadek Chebbah</span>
+            <span>Page 3 / 3</span>
+        </div>
+    </div>
+
+</body>
+</html>
